@@ -30,6 +30,7 @@ class GameFragment : Fragment() {
         parseArgs()
         gameSettings = GameRepositoryImpl.getGameSettings(level)
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,7 +41,7 @@ class GameFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.tvSum.setOnClickListener{
+        binding.tvSum.setOnClickListener {
             launchGameFinishedFragment()
         }
     }
@@ -49,9 +50,10 @@ class GameFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
     private fun launchGameFinishedFragment() {
 
-        gameResult = GameResult(winner, countOfRightAnswers, countOfQuestions, gameSettings )
+        gameResult = GameResult(winner, countOfRightAnswers, countOfQuestions, gameSettings)
         requireActivity().supportFragmentManager.beginTransaction()
             .replace(R.id.main_container, GameFinishedFragment.newInstance(gameResult))
             .addToBackStack(null)
@@ -59,10 +61,12 @@ class GameFragment : Fragment() {
     }
 
     private fun parseArgs() {
-        level = requireArguments().getSerializable(KEY_LEVEL) as Level
+        requireArguments().getParcelable<Level>(KEY_LEVEL)?.let {
+            level = it
+        }
     }
 
-    companion object{
+    companion object {
 
         const val KEY_LEVEL = "level"
         const val NAME = "GameFragment"
@@ -70,12 +74,11 @@ class GameFragment : Fragment() {
         fun newInstance(level: Level): GameFragment {
             return GameFragment().apply {
                 arguments = Bundle().apply {
-                    putSerializable(KEY_LEVEL, level)
+                    putParcelable(KEY_LEVEL, level)
                 }
             }
         }
     }
-
 
 
 }
