@@ -19,7 +19,9 @@ class GameFragment : Fragment() {
     private lateinit var level: Level
     private lateinit var gameResult: GameResult
     private lateinit var gameSettings: GameSettings
-    private lateinit var gameViewModel: GameViewModel
+    private val gameViewModel: GameViewModel by lazy {
+        ViewModelProvider(this)[GameViewModel::class.java]
+    }
 
 
     private var _binding: FragmentGameBinding? = null
@@ -30,7 +32,6 @@ class GameFragment : Fragment() {
         super.onCreate(savedInstanceState)
         parseArgs()
         gameSettings = GameRepositoryImpl.getGameSettings(level)
-        gameViewModel = ViewModelProvider(this)[GameViewModel::class.java]
         gameViewModel.getGameSettings(level)
 
 
