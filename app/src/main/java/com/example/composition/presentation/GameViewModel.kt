@@ -16,12 +16,11 @@ import com.example.composition.domain.usecases.GetGameSettingsUseCase
 
 class GameViewModel(
     private val application: Application,
-    private  var level: Level
-    ) : ViewModel() {
+    private val level: Level
+) : ViewModel() {
 
     private lateinit var gameSettings: GameSettings
 
-    private val context = application
     private val repository = GameRepositoryImpl
 
     private val generateQuestionUseCase = GenerateQuestionUseCase(repository)
@@ -64,8 +63,12 @@ class GameViewModel(
     private var countOfRightAnswers = 0
     private var countOfQuestions = 0
 
-    fun startGame(level: Level) {
-        getGameSettings(level)
+    init {
+        startGame()
+    }
+
+    private fun startGame() {
+        getGameSettings()
         startTimer()
         generateQuestion()
         updateProgress()
@@ -81,7 +84,7 @@ class GameViewModel(
         val percent = calculatePercentOfRightAnswers()
         _percentOfRightAnswers.value = percent
         _progressAnswers.value = String.format(
-            context.resources.getString(R.string.progress_answers),
+            application.resources.getString(R.string.progress_answers),
             countOfRightAnswers,
             gameSettings.minCountOfRightAnswers
         )
@@ -104,8 +107,7 @@ class GameViewModel(
         countOfQuestions++
     }
 
-    private fun getGameSettings(level: Level) {
-        this.level = level
+    private fun getGameSettings() {
         this.gameSettings = getGameSettingsUseCase(level)
         _minPercent.value = gameSettings.minPercentOfRightAnswers
     }
