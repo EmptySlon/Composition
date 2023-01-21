@@ -5,8 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.example.composition.R
 import com.example.composition.databinding.FragmentGameFinishedBinding
 import com.example.composition.domain.entity.GameResult
 
@@ -40,11 +42,26 @@ class GameFinishedFragment : Fragment() {
                 override fun handleOnBackPressed() {
                     retryGame()
                 }
-
             })
         binding.buttonRetry.setOnClickListener {
             retryGame()
         }
+        val minCountOfRightAnswers = gameResult.gameSettings.minCountOfRightAnswers.toString()
+        binding.tvRequiredAnswers.text = getString(R.string.required_score, minCountOfRightAnswers)
+        val countOfRightAnswers = gameResult.countOfRightAnswers.toString()
+        binding.tvScoreAnswers.text = getString(R.string.score_answers, countOfRightAnswers)
+        val minPercentOfRightAnswers = gameResult.gameSettings.minPercentOfRightAnswers.toString()
+        binding.tvRequiredPercentage.text =
+            getString(R.string.required_percentage, minPercentOfRightAnswers)
+        val percentOfRightAnswers =
+            ((countOfRightAnswers.toDouble() / minCountOfRightAnswers.toDouble()) * 100).toInt()
+                .toString()
+        binding.tvScorePercentage.text = getString(R.string.score_percentage, percentOfRightAnswers)
+        val imageDrawable =
+            if (minPercentOfRightAnswers.toInt() <= percentOfRightAnswers.toInt()) {
+                getDrawable(requireActivity(), R.drawable.ic_smile)
+            } else getDrawable(requireActivity(), R.drawable.ic_sad)
+        binding.emojiResult.setImageDrawable(imageDrawable)
     }
 
 
