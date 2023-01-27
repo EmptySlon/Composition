@@ -14,7 +14,7 @@
     </fragment>
     <fragment
         android:id="@+id/gameFragment"
-        android:name="GameFragment"
+        android:name="com.example.composition.presentation.GameFragment"
         android:label="GameFragment" >
         <action
             android:id="@+id/action_gameFragment_to_gameFinishedFragment"
